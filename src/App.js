@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 
 // Page
-import { Home, About } from "./pages/pages";
+import { Home, About, Main } from "./pages/pages";
 
 class App extends Component {
   render() {
@@ -16,6 +16,7 @@ class App extends Component {
             <Route path="/about/:name" component={About}/>
             <Route path="/about/" component={About}/>
           </Switch>
+          <Route exact path="/todo" component={Main}/>
         </Router>
       </Fragment>
     );
