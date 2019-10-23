@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import TodoListTemplate from "../components/TodoListTemplate";
 import TodoItemList from "../components/TodoItemList";
 import Form from "../components/Form";
+import _ from "underscore";
 
 class Main extends Component {
 
@@ -10,9 +11,9 @@ class Main extends Component {
     state = {
         input: "",
         todos: [
-            { id: 0, text: " React Study 1", checked: false },
-            { id: 1, text: " React Study 2", checked: true },
-            { id: 2, text: " React Study 3", checked: false }
+            { id: 0, text: "React Study 1", checked: false },
+            { id: 1, text: "React Study 2", checked: true },
+            { id: 2, text: "React Study 3", checked: false },
         ]
     }
 
@@ -40,6 +41,41 @@ class Main extends Component {
         }
     }
 
+    handleRemoveOverlap = () => {
+        const { todos } = this.state;
+        let testArray = [
+            {
+                id: 0,
+                checked: false
+            },
+            {
+                id: 1,
+                checked: false
+            },
+            {
+                id: 1,
+                checked: false
+            },
+            {
+                id: 0,
+                checked: false
+            },
+            {
+                id: 2,
+                checked: false
+            }
+        ]
+        const overlapCheck = _.uniq(todos, 'text');
+        this.setState({
+            todos: overlapCheck
+        })
+        // let overlap2 = testArray.filter((item, i) => {
+        //     return testArray.findIndex((item2, j) => {
+        //         return item.id === item2.id;
+        //     }) === i;
+        // });
+    }
+
     handleToggle = (id) => {
         const { todos } = this.state;
 
@@ -58,7 +94,7 @@ class Main extends Component {
         });
     }
 
-    handlerRemove = (id) => {
+    handleRemove = (id) => {
         const { todos } = this.state;
         this.setState({
             todos: todos.filter(todo => todo.id !== id)
@@ -67,15 +103,17 @@ class Main extends Component {
 
     render() {
         const { input, todos } = this.state;
-        const { handleChange, handleCreate, handleKeyPress, handleToggle, handlerRemove } = this;
+        const { handleChange, handleCreate, handleKeyPress, handleToggle, handleRemove, handleRemoveOverlap } = this;
         return (
             <TodoListTemplate
                 form={<Form
                         value={input}
                         onKeyPress={handleKeyPress}
                         onChange={handleChange}
-                        onCreate={handleCreate}/>}>
-                <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handlerRemove} />
+                        onCreate={handleCreate}
+                        onOverlap={handleRemoveOverlap}
+                        />}>
+                <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove} />
             </TodoListTemplate>
         );
     }
